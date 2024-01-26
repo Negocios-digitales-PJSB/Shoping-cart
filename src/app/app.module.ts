@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations'; 
+//importar reactive
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,9 +24,11 @@ import { FooterComponent } from './componentes/footer/footer.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    PrimengModule
+    PrimengModule,
+    BrowserAnimationsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { }import { ReactiveFormsModule } from '@angular/forms';
