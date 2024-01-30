@@ -1,1 +1,13 @@
-<p>register works!</p>
+<form [formGroup]="registerForma">
+    <p-card header="Registro" [style]="{width:'500 px'}">
+        <div class="filed">
+            <input type="text"
+             pInputText 
+             formControlName="name" 
+             name='name'
+             class="w-full"
+             placeholder="Ingresa tu nombre completo"
+             />
+        </div>
+    </p-card>    
+</form>
