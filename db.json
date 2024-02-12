@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "fullname": "Julian Soto Badillo",
+      "email": "pedrojuliaann@gmail.com",
+      "password": "123456789",
+      "id": "22bf"
+    },
+    {
+      "id": "5226",
+      "fullName": "Pedro Julian",
+      "email": "pedrojuliaann@gmail.com",
+      "password": "asdfggASDF34"
+    },
+    {
+      "id": "b787",
+      "fullName": "Juna Soto",
+      "email": "juanpjs.b@gmail.com",
+      "password": "asfsdgDSSGS345"
+    }
+  ]
+}

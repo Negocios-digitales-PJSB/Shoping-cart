@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { User } from '../../interfaces/user';
+import { passwordMatchValidator } from '../../shared/password-match.directives';
+import { MessageService } from 'primeng/api';
+
 
 @Component({
   selector: 'app-register',
@@ -15,15 +21,23 @@ export class RegisterComponent {
   }
 
   registerForma = this.fb.group({
-    fullName: ['', [Validators.required, Validators.pattern(/(?:[a-zA-Z]+)*$/), Validators.minLength(8)]],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.[a-z])(?=.[A-Z])(?=.[!@#$%^&])/)]], // (/^(?=.^[a-z])(?=.^[A-Z])[0-9a-zA-Z]{8,}$/)] //^(?=[a-z])(?=[A-Z])[0-9a-zA-Z]{8,}$
+    fullName: ['', [Validators.required]],
+    email:['',[Validators.required, Validators.email]],
+    password: ['', [Validators.required,Validators.minLength(8),Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/)]],
+    confirmPassword:['', [Validators.required,]]
+  },{
+    validators:passwordMatchValidator
+  })
 
-    confirmPassword: ['', [Validators.required]],
-  }, { validator: this.passwordMatchValidator });
+  constructor(private fb: FormBuilder, 
+    private auth: AuthService,
+     private router: Router, 
+     private messageService: MessageService
+     ) {
 
-  constructor(private fb: FormBuilder) {}
+     }
 
+     
   get fullName() {
     return this.registerForma.controls['fullName']
   }
@@ -39,15 +53,37 @@ export class RegisterComponent {
   get confirmPassword() {
     return this.registerForma.controls['confirmPassword'];
   }
+  
+  enviarRegistro(){
+    console.log(this.confirmPassword.value)
+    const data = {...this.registerForma.value}
 
-  passwordMatchValidator(control: AbstractControl) {
-    const password = control.get('password')?.value;
-    const confirmPassword = control.get('confirmPassword')?.value;
-  
-    if (password && confirmPassword) {
-      return password === confirmPassword ? null : { passwordMismatch: true };
+    delete data.confirmPassword
+
+    this.auth.registerUser(data as User).subscribe(
+      response => {
+        console.log(response)
+        this.messageService.add({ severity: 'success', 
+        summary: 'Registro exitoso', 
+        detail: 'Se a agregado correctamente' });
+        this.router.navigate(['login']);
+
+      },
+      error => console.log(error)
+      
+    )
+  }
+
+  getPasswordError() {
+    if (this.password.hasError('required')) {
+      return 'La contraseña es requerida.';
     }
-  
-    return null; // Si uno de los campos está vacío, no aplicar la validación
+    if (this.password.hasError('minlength')) {
+      return 'La contraseña debe tener al menos 8 caracteres.';
+    }
+    if (this.password.hasError('pattern')) {
+      return 'La contraseña debe tener al menos una letra minúscula, una mayúscula y un carácter especial.';
+    }
+    return '';
   }
 }
